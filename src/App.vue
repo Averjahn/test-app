@@ -2,7 +2,7 @@
   <el-container style="height: 100vh;">
     <el-main>
       <el-row>
-        <el-scrollbar :span="12">
+        <el-scrollbar>
           <el-card class="box-card">
             <div 
               v-for="item in items" 
@@ -15,7 +15,7 @@
             </div>
           </el-card>
         </el-scrollbar>
-        <el-col :span="12">
+        <el-col :span="16">
           <el-card>
             <h2 v-if="selectedItem">ID: {{ selectedItem.id }}</h2>
             <h2 v-if="selectedItem">Title: {{ selectedItem.title }}</h2>
@@ -59,12 +59,8 @@ export default {
 .box-card {
   overflow: auto;
   height: 90vh;
-  width: 40rem;
+  width: 35rem;
   text-align: center;
-}
-
-.item-selected {
-  background-color: #9b9b9b;
 }
 
 .item {
@@ -72,5 +68,9 @@ export default {
   margin-bottom: 10px;
   border: 1px solid #ccc;
   padding-bottom: 10px;
+}
+
+.item-selected {
+  background-color: #9b9b9b;
 }
 </style>
