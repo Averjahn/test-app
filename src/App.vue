@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!store.isLoading">
+    <div>
     <el-container class="container">
         <el-row class="content">
           <ItemsList class="items-list"/>
