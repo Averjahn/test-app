@@ -1,76 +1,67 @@
 <template>
-  <el-container style="height: 100vh;">
-    <el-main>
-      <el-row>
-        <el-scrollbar>
-          <el-card class="box-card">
-            <div 
-              v-for="item in items" 
-              :key="item.id" 
-              :class="{ 'item-selected': selectedItem && selectedItem.id === item.id }" 
-              @click="selectItem(item)" 
-              class="item"
-              >
-              <h4>Item-{{ item.id }}</h4>
-            </div>
-          </el-card>
-        </el-scrollbar>
-        <el-col :span="16">
-          <el-card>
-            <h2 v-if="selectedItem">ID: {{ selectedItem.id }}</h2>
-            <h2 v-if="selectedItem">Title: {{ selectedItem.title }}</h2>
-            <h2 v-if="selectedItem">Discription: {{ selectedItem.body }}</h2>
-          </el-card>
-        </el-col>
-      </el-row>
-    </el-main>
-  </el-container>
+  <div v-if="!store.isLoading">
+    <el-container class="container">
+        <el-row class="content">
+          <ItemsList class="items-list"/>
+          <ItemInfo class="item-info"
+            v-if="store.showInfo" 
+          />
+        </el-row>
+    </el-container>
+  </div>
 </template>
 
 <script>
-import { ref, onMounted } from "vue";
-import axios from "axios";
+  import { useInfoStore } from './stores/info';
+  import { defineAsyncComponent, onMounted } from 'vue';
+  import ItemsList from './components/ItemsList.vue';
+  const ItemInfo = defineAsyncComponent(() => import('./components/ItemInfo.vue'))
 
-export default {
-  setup() {
-    const items = ref([]);
-    const selectedItem = ref(null);
+  export default{
 
-    const selectItem = item => {
-      selectedItem.value = item;
-    };
+    components: {
+      ItemsList,
+      ItemInfo
+    },
 
-    onMounted(async () => {
-      const res = await axios.get("https://jsonplaceholder.typicode.com/posts");
-      items.value = res.data.slice(0, 100);
-    });
-
-    return {
-      items,
-      selectedItem,
-      selectItem
-    };
-  }
-};
+    setup() {
+      const store = useInfoStore();
+      onMounted(() => {
+        store.getInfo();
+      }) 
+      return {
+        store
+      }
+    }
+  } 
 </script>
+<style>
+  .container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #fdcece;
+  }
+  .content {
+    display: flex;
+    flex-direction: row;
+    height: 90%;
+    width: 80%;
+    background-color: #fff;
+    border-radius: 15px;
+  }
+  .items-list {
+    width: 40%;
+  }
+  .item-info {
+    width: 60%;
+  }
 
-<style scoped>
-
-.box-card {
-  overflow: auto;
-  height: 90vh;
-  width: 35rem;
-  text-align: center;
-}
-
-.item {
-  cursor: pointer;
-  margin-bottom: 10px;
-  border: 1px solid #ccc;
-  padding-bottom: 10px;
-}
-
-.item-selected {
-  background-color: #9b9b9b;
-}
+  @media (max-width: 768px) {
+    .content {
+      width: 95%;
+      height: 95%;
+    }
+  }
 </style>
